@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public interface RegistrationService {
 
-    Registration save(Registration registration);
+    Registration save(Registration any);
 
     Optional<Registration> getById(Long id);
 }

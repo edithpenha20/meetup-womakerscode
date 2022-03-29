@@ -1,8 +1,10 @@
 package com.womakerscode.meetup.service;
 
+import com.womakerscode.meetup.exception.BusinessException;
 import com.womakerscode.meetup.model.entity.Registration;
 import com.womakerscode.meetup.repository.RegistrationRepository;
 import com.womakerscode.meetup.service.impl.RegistrationServiceImpl;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -41,7 +43,7 @@ public class ResgitrationServiceTest {
         Registration registration = createValidResgitration();
 
         //execucao
-        //Mockito.when(repository.existsByResgistration(Mockito.anyString())).thenReturn(false);
+        Mockito.when(repository.existsByResgistration(Mockito.anyString())).thenReturn(false);
         Mockito.when(repository.save(registration)).thenReturn(createValidResgitration());
 
         Registration savedRegistration = service.save(registration);
@@ -54,14 +56,33 @@ public class ResgitrationServiceTest {
     }
 
     @Test
-    @DisplayName("Get registration by id.")
-    public void getByIdTest(){
+    @DisplayName("Should Not Saved As Registration Duplicated")
+    public void shouldNotSavedAsRegistrationDuplicated(){
 
         //cenario
         Registration registration = createValidResgitration();
 
         //execucao
-        //Mockito.when(repository.existsByResgistration(Mockito.anyString())).thenReturn(false);
+        Mockito.when(repository.existsByResgistration(Mockito.any())).thenReturn(true);
+
+        Throwable exception = Assertions.catchThrowable(() -> service.save(registration));
+
+        //assert
+        assertThat(exception)
+                .isInstanceOf(BusinessException.class)
+                .hasMessage("Registration already created.");
+
+        Mockito.verify(repository, Mockito.never()).save(registration);
+    }
+
+    @Test
+    @DisplayName("Get registration by id.")
+    public void getRegistrationByIdTest(){
+
+        //cenario
+        Registration registration = createValidResgitration();
+
+        //execucao
         Mockito.when(repository.findById(registration.getId())).thenReturn(Optional.of(registration));
 
         Optional<Registration> foundRegistration = service.getById(registration.getId());
