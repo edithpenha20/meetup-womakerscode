@@ -107,7 +107,7 @@ public class RegistrationControllerTest {
 
         RegistrationDTO dto = newRegisterDTO();
 
-        Registration book = Registration.builder()
+        Registration registration = Registration.builder()
                 .id(1L)
                 .name("Endy")
                 .email("endy@email.com")
@@ -116,7 +116,7 @@ public class RegistrationControllerTest {
                 .registration("001").build();
 
 
-        BDDMockito.given( service.getById(id) ).willReturn(Optional.of(book));
+        BDDMockito.given( service.getById(id) ).willReturn(Optional.of(registration));
 
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
                 .get(REQMAPPING.concat("/" + id))

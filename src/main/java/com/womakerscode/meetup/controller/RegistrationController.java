@@ -48,7 +48,7 @@ public class RegistrationController {
     public RegistrationDTO get( @PathVariable Long id ){
         return service
                 .getById(id)
-                .map( book -> modelMapper.map(book, RegistrationDTO.class)  )
+                .map( registration -> modelMapper.map(registration, RegistrationDTO.class)  )
                 .orElseThrow( () -> new ResponseStatusException(HttpStatus.NOT_FOUND) );
     }
 
