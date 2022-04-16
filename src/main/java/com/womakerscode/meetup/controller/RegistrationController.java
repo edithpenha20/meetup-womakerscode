@@ -1,20 +1,14 @@
 package com.womakerscode.meetup.controller;
 
-import com.womakerscode.meetup.controller.exception.MeetupErrors;
 import com.womakerscode.meetup.controller.form.RegistrationForm;
-import com.womakerscode.meetup.exception.BusinessException;
-import com.womakerscode.meetup.model.RegistrationDTO;
+import com.womakerscode.meetup.model.dto.RegistrationDTO;
 import com.womakerscode.meetup.model.entity.Registration;
 import com.womakerscode.meetup.service.RegistrationService;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -25,8 +19,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/registrations")
 public class RegistrationController {
-
-    private static final Logger logger = LoggerFactory.getLogger(RegistrationController.class);
 
     private RegistrationService service;
     private ModelMapper modelMapper;
@@ -72,7 +64,7 @@ public class RegistrationController {
     }
 
     @GetMapping
-    public Page<RegistrationDTO> find(Registration dto, Pageable pageRequest ){
+    public Page<RegistrationDTO> find(RegistrationDTO dto, Pageable pageRequest ){
         Registration filter = modelMapper.map(dto, Registration.class);
         Page<Registration> result = service.findRegistration(filter, pageRequest);
         List<RegistrationDTO> list = result.getContent()

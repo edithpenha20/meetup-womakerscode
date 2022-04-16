@@ -1,4 +1,4 @@
-package com.womakerscode.meetup.model;
+package com.womakerscode.meetup.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -10,34 +10,26 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
-public class RegistrationDTO {
+@NoArgsConstructor
+@AllArgsConstructor
+public class CreateMeetupDTO {
 
     private Long id;
 
-    @NotEmpty
-    private String name;
+    private String event;
 
-    @NotEmpty
-    private String email;
-
-    @NotEmpty
-    private String password;
-
-    //@NotEmpty
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
-    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     @JsonFormat(pattern = "dd/MM/yyyy")
-    private LocalDate dateOfRegistration;
+    private LocalDate eventDate;
 
-    @NotEmpty
-    private String registration;
+    private String hostedBy;
 
+    private String speaker;
+
+    private String linkMeetup;
 }

@@ -2,6 +2,7 @@ package com.womakerscode.meetup.controller.exception;
 
 import com.womakerscode.meetup.exception.BusinessException;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
