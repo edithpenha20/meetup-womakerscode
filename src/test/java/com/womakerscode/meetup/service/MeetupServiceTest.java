@@ -2,7 +2,7 @@ package com.womakerscode.meetup.service;
 
 import com.womakerscode.meetup.model.entity.CreateMeetup;
 import com.womakerscode.meetup.model.entity.Meetup;
-import com.womakerscode.meetup.model.entity.Registration;
+import com.womakerscode.meetup.model.entity.User;
 import com.womakerscode.meetup.repository.MeetupRepository;
 import com.womakerscode.meetup.service.impl.MeetupServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,20 +47,20 @@ public class MeetupServiceTest {
 
         assertThat(meetup.getId()).isEqualTo(meetupSaved.getId());
         assertThat(meetup.getMeetupDateRegistration()).isEqualTo(meetupSaved.getMeetupDateRegistration());
-        assertThat(meetup.getRegistration()).isEqualTo(meetupSaved.getRegistration());
+        assertThat(meetup.getUser()).isEqualTo(meetupSaved.getUser());
         assertThat(meetup.getEventDetails()).isEqualTo(meetupSaved.getEventDetails());
     }
 
     @Test
     @DisplayName("Should update schedule a meetup held by the user.")
     public void updateMeetupTest(){
-        Registration registration = Registration.builder()
+        User user = User.builder()
                 .id(1L)
                 .name("Endy Endy")
                 .email("endy@email.com")
                 .password("1234")
                 .dateOfRegistration(LocalDate.now())
-                .registration("endy")
+                .login("endy")
                 .build();
         CreateMeetup createMeetup = CreateMeetup.builder()
                 .id(1L)
@@ -76,7 +76,7 @@ public class MeetupServiceTest {
 
         Meetup updatedMeetup = Meetup.builder()
                 .meetupDateRegistration(LocalDate.now())
-                .registration(registration)
+                .user(user)
                 .eventDetails(createMeetup)
                 .build();
 
@@ -86,7 +86,7 @@ public class MeetupServiceTest {
 
         assertThat(meetup.getId()).isEqualTo(updatedMeetup.getId());
         assertThat(meetup.getMeetupDateRegistration()).isEqualTo(updatedMeetup.getMeetupDateRegistration());
-        assertThat(meetup.getRegistration()).isEqualTo(updatedMeetup.getRegistration());
+        assertThat(meetup.getUser()).isEqualTo(updatedMeetup.getUser());
         assertThat(meetup.getEventDetails()).isEqualTo(updatedMeetup.getEventDetails());
     }
 
@@ -107,7 +107,7 @@ public class MeetupServiceTest {
         assertThat(result.isPresent()).isTrue();
         assertThat(result.get().getId()).isEqualTo(id);
         assertThat(result.get().getMeetupDateRegistration()).isEqualTo(meetup.getMeetupDateRegistration());
-        assertThat(result.get().getRegistration()).isEqualTo(meetup.getRegistration());
+        assertThat(result.get().getUser()).isEqualTo(meetup.getUser());
         assertThat(result.get().getEventDetails()).isEqualTo(meetup.getEventDetails());
 
         verify( repository ).findById(id);
@@ -116,13 +116,13 @@ public class MeetupServiceTest {
 
     public static Meetup createMeetup(){
         Meetup meetup = Meetup.builder().id(1l).build();
-        Registration registration = Registration.builder()
+        User user = User.builder()
                 .id(1L)
                 .name("Endy")
                 .email("endy@email.com")
                 .password("1234")
                 .dateOfRegistration(LocalDate.now())
-                .registration("endy")
+                .login("endy")
                 .build();
         CreateMeetup createMeetup = CreateMeetup.builder()
                 .id(1L)
@@ -135,7 +135,7 @@ public class MeetupServiceTest {
 
         return Meetup.builder()
                 .meetupDateRegistration(LocalDate.now())
-                .registration(registration)
+                .user(user)
                 .eventDetails(createMeetup)
                 .build();
     }

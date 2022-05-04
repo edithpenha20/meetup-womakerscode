@@ -1,15 +1,26 @@
 package com.womakerscode.meetup.service.impl;
 
+import com.womakerscode.meetup.model.dto.MeetupDTO;
+import com.womakerscode.meetup.model.dto.MeetupFilter;
+import com.womakerscode.meetup.model.dto.MeetupUserDTO;
+import com.womakerscode.meetup.model.dto.UserDTO;
+import com.womakerscode.meetup.model.entity.CreateMeetup;
 import com.womakerscode.meetup.model.entity.Meetup;
-import com.womakerscode.meetup.controller.form.MeetupFilterDTO;
-import com.womakerscode.meetup.model.entity.Registration;
+import com.womakerscode.meetup.controller.form.MeetupForm;
+import com.womakerscode.meetup.model.entity.User;
 import com.womakerscode.meetup.repository.MeetupRepository;
 import com.womakerscode.meetup.service.MeetupService;
+import lombok.val;
+import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class MeetupServiceImpl implements MeetupService {
@@ -37,13 +48,13 @@ public class MeetupServiceImpl implements MeetupService {
     }
 
     @Override
-    public Page<Meetup> findAllMeetups(MeetupFilterDTO filterDTO, Pageable pageable) {
-        return repository.findByRegistrationOnMeetup( filterDTO.getRegistration(), filterDTO.getEvent(), pageable );
+    public Page<Meetup> findAllMeetups(MeetupFilter filter, Pageable pageable) {
+        return repository.findByUserOnMeetup( filter.getLogin(), filter.getEvent(), pageable );
     }
 
     @Override
-    public Page<Meetup> getRegistrationsByMeetup(Registration registration, Pageable pageable) {
-        return repository.findByRegistration(registration, pageable);
+    public Page<Meetup> getUserByMeetup(User user, Pageable pageable) {
+        return repository.findByUser(user, pageable);
     }
 
 }

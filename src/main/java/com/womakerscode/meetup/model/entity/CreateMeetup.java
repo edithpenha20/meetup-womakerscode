@@ -41,4 +41,7 @@ public class CreateMeetup {
     @OneToMany(mappedBy = "eventDetails")
     private List<Meetup> meetups;
 
+    @ManyToOne
+    private User users;
+
 }

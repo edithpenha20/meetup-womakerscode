@@ -1,16 +1,16 @@
 package com.womakerscode.meetup.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.womakerscode.meetup.controller.form.MeetupFilterDTO;
+import com.womakerscode.meetup.controller.form.MeetupForm;
 import com.womakerscode.meetup.exception.BusinessException;
 import com.womakerscode.meetup.model.dto.CreateMeetupDTO;
-import com.womakerscode.meetup.model.dto.RegistrationDTO;
+import com.womakerscode.meetup.model.dto.UserDTO;
 import com.womakerscode.meetup.model.entity.CreateMeetup;
 import com.womakerscode.meetup.model.entity.Meetup;
-import com.womakerscode.meetup.model.entity.Registration;
+import com.womakerscode.meetup.model.entity.User;
 import com.womakerscode.meetup.service.CreateMeetupService;
 import com.womakerscode.meetup.service.MeetupService;
-import com.womakerscode.meetup.service.RegistrationService;
+import com.womakerscode.meetup.service.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -44,7 +44,7 @@ public class MeetupControllerTest {
     MockMvc mockMvc;
 
     @MockBean
-    private RegistrationService registrationService;
+    private UserService userService;
 
     @MockBean
     private CreateMeetupService createMeetupService;
@@ -57,16 +57,16 @@ public class MeetupControllerTest {
     public void createMeetupTest() throws Exception {
 
         //MeetupDTO dto = MeetupDTO.builder().eventDetails(newEventMeetupDTO()).registration(newRegisterDTO()).build();
-        MeetupFilterDTO dto = MeetupFilterDTO.builder().event("Microservice").registration("endy").build();
+        MeetupForm dto = MeetupForm.builder().event("Microservice").login("endy").build();
         String json = new ObjectMapper().writeValueAsString(dto);
 
-        Registration registration = Registration.builder()
+        User user = User.builder()
                 .id(1L)
                 .name("Endy")
                 .email("endy@email.com")
                 .password("1234")
                 .dateOfRegistration(LocalDate.now())
-                .registration("endy")
+                .login("endy")
                 .build();
 
         CreateMeetup eventMeetup = CreateMeetup.builder()
@@ -78,13 +78,13 @@ public class MeetupControllerTest {
                 .speaker("Michele Brito")
                 .build();
 
-        BDDMockito.given(registrationService.getByRegistration(registration.getRegistration())).
-                willReturn(Optional.of(registration));
+        BDDMockito.given(userService.getUserByLogin(user.getLogin())).
+                willReturn(Optional.of(user));
 
         BDDMockito.given(createMeetupService.findByEvent(eventMeetup.getEvent())).
                 willReturn(Optional.of(eventMeetup));
 
-        Meetup meetup = Meetup.builder().id(1L).registration(registration).eventDetails(eventMeetup).build();
+        Meetup meetup = Meetup.builder().id(1L).user(user).eventDetails(eventMeetup).build();
 
         BDDMockito.given(meetupService.save(Mockito.any(Meetup.class))).willReturn(meetup);
 
@@ -105,16 +105,16 @@ public class MeetupControllerTest {
     @DisplayName("Should return error when try to register an a meetup nonexistent")
     public void invalidRegistrationCreateMeetupTest() throws Exception {
 
-        MeetupFilterDTO dto = MeetupFilterDTO.builder().event("Microservice").build();
+        MeetupForm dto = MeetupForm.builder().event("Microservice").build();
         String json = new ObjectMapper().writeValueAsString(dto);
 
-        Registration registration = Registration.builder()
+        User user = User.builder()
                 .id(1L)
                 .name("Endy")
                 .email("endy@email.com")
                 .password("1234")
                 .dateOfRegistration(LocalDate.now())
-                .registration("endy")
+                .login("endy")
                 .build();
 
         CreateMeetup eventMeetup = CreateMeetup.builder()
@@ -126,13 +126,13 @@ public class MeetupControllerTest {
                 .speaker("Michele Brito")
                 .build();
 
-        BDDMockito.given(registrationService.getByRegistration(registration.getRegistration())).
-                willReturn(Optional.of(registration));
+        BDDMockito.given(userService.getUserByLogin(user.getLogin())).
+                willReturn(Optional.of(user));
 
         BDDMockito.given(createMeetupService.findByEvent(eventMeetup.getEvent())).
                 willReturn(Optional.of(eventMeetup));
 
-        Meetup meetup = Meetup.builder().id(1L).registration(registration).eventDetails(eventMeetup).build();
+        Meetup meetup = Meetup.builder().id(1L).user(user).eventDetails(eventMeetup).build();
 
         BDDMockito.given(meetupService.save(Mockito.any(Meetup.class))).willReturn(meetup);
 
@@ -153,16 +153,16 @@ public class MeetupControllerTest {
     @DisplayName("Should return error when try to register a registration already register on a meetup")
     public void  meetupRegistrationErrorOnCreateMeetupTest() throws Exception {
 
-        MeetupFilterDTO dto = MeetupFilterDTO.builder().event("Microservice").build();
+        MeetupForm dto = MeetupForm.builder().event("Microservice").build();
         String json = new ObjectMapper().writeValueAsString(dto);
 
-        Registration registration = Registration.builder()
+        User user = User.builder()
                 .id(1L)
                 .name("Endy")
                 .email("endy@email.com")
                 .password("1234")
                 .dateOfRegistration(LocalDate.now())
-                .registration("endy")
+                .login("endy")
                 .build();
 
         CreateMeetup eventMeetup = CreateMeetup.builder()
@@ -174,13 +174,13 @@ public class MeetupControllerTest {
                 .speaker("Michele Brito")
                 .build();
 
-        BDDMockito.given(registrationService.getByRegistration(registration.getRegistration())).
-                willReturn(Optional.of(registration));
+        BDDMockito.given(userService.getUserByLogin(user.getLogin())).
+                willReturn(Optional.of(user));
 
         BDDMockito.given(createMeetupService.findByEvent(eventMeetup.getEvent())).
                 willReturn(Optional.of(eventMeetup));
 
-        Meetup meetup = Meetup.builder().id(1L).registration(registration).eventDetails(eventMeetup).build();
+        Meetup meetup = Meetup.builder().id(1L).user(user).eventDetails(eventMeetup).build();
 
         BDDMockito.given(meetupService.save(Mockito.any(Meetup.class))).willReturn(meetup);
 
@@ -208,13 +208,13 @@ public class MeetupControllerTest {
                 .build();
     }
 
-    private RegistrationDTO newRegisterDTO(){
-        return RegistrationDTO.builder()
+    private UserDTO newRegisterDTO(){
+        return UserDTO.builder()
                 .name("Endy")
                 .email("endy@email.com")
-                .password("1234")
+                //.password("1234")
                 .dateOfRegistration(LocalDate.now())
-                .registration("001")
+                .login("001")
                 .build();
     }
 }

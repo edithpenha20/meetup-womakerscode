@@ -5,17 +5,21 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotEmpty;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class MeetupFilterDTO {
+public class UserUpdate {
 
-    @NotNull
-    private String registration;
+    @NotEmpty
+    private String name;
 
-    @NotNull
-    private  String event;
+    @NotEmpty
+    private String email;
+
+    @NotEmpty
+    private String password;
+
 }

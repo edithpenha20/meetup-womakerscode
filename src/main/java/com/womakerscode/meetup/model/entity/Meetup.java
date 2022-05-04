@@ -20,6 +20,8 @@ public class Meetup {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long login;
+
     @Column
     private String event;
 
@@ -27,9 +29,9 @@ public class Meetup {
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate meetupDateRegistration = LocalDate.now();
 
-    @JoinColumn(name = "id_registration")
+    @JoinColumn(name = "id_user")
     @ManyToOne
-    private Registration registration;
+    private User user;
 
     @JoinColumn(name = "author_meetup")
     @ManyToOne

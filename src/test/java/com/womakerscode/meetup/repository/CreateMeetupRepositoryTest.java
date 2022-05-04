@@ -1,7 +1,7 @@
 package com.womakerscode.meetup.repository;
 
 import com.womakerscode.meetup.model.entity.CreateMeetup;
-import com.womakerscode.meetup.model.entity.Registration;
+import com.womakerscode.meetup.model.entity.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -63,10 +63,10 @@ public class CreateMeetupRepositoryTest {
                 .find(CreateMeetup.class, event.getId());
         repository.delete(foundEvent);
 
-        Registration deleteRegistration = entityManager
-                .find(Registration.class, event.getId());
+        User deleteUser = entityManager
+                .find(User.class, event.getId());
 
-        assertThat(deleteRegistration).isNull();
+        assertThat(deleteUser).isNull();
 
     }
 

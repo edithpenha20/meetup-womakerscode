@@ -1,42 +1,38 @@
-package com.womakerscode.meetup.model.dto;
+package com.womakerscode.meetup.shared;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import com.womakerscode.meetup.model.dto.MeetupDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RegistrationDTO {
+public class UserMeetupDTO {
 
     private Long id;
 
-    @NotEmpty
     private String name;
 
-    @NotEmpty
     private String email;
-
-    @NotEmpty
-    private String password;
 
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
-    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dateOfRegistration;
 
-    @NotEmpty
-    private String registration;
+    private String login;
+
+    private List<MeetupDTO> meetups;
 
 }

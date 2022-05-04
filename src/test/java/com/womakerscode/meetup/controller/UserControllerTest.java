@@ -1,10 +1,12 @@
 package com.womakerscode.meetup.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.womakerscode.meetup.controller.form.UserForm;
+import com.womakerscode.meetup.controller.form.UserUpdate;
 import com.womakerscode.meetup.exception.BusinessException;
-import com.womakerscode.meetup.model.dto.RegistrationDTO;
-import com.womakerscode.meetup.model.entity.Registration;
-import com.womakerscode.meetup.service.RegistrationService;
+import com.womakerscode.meetup.model.dto.UserDTO;
+import com.womakerscode.meetup.model.entity.User;
+import com.womakerscode.meetup.service.UserService;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,9 +37,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
-@WebMvcTest(controllers = RegistrationController.class)
+@WebMvcTest(controllers = UserController.class)
 @AutoConfigureMockMvc
-public class RegistrationControllerTest {
+public class UserControllerTest {
 
     static String REQMAPPING = "/registrations";
 
@@ -45,17 +47,25 @@ public class RegistrationControllerTest {
     MockMvc mvc;
 
     @MockBean
-    RegistrationService service;
+    UserService service;
 
     @Test
     @DisplayName("Successfully register new user")
     public void createRegisterTest() throws Exception {
 
-        RegistrationDTO dto = newRegisterDTO();
-        Registration savedRegister = Registration.builder().id(1L).name("Endy").email("endy@email.com").password("1234").dateOfRegistration(LocalDate.now()).registration("001").build();
+        UserDTO dto = newRegisterDTO();
+        UserForm form = newRegisterForm();
+        User user = User.builder()
+                .id(1L)
+                .name("Endy")
+                .email("endy@email.com")
+                .password("1234")
+                .dateOfRegistration(LocalDate.now())
+                .login("endy")
+                .build();
 
-        BDDMockito.given(service.save(Mockito.any(Registration.class))).willReturn(savedRegister);
-        String json = new ObjectMapper().writeValueAsString(dto);
+        BDDMockito.given(service.save(Mockito.any(User.class))).willReturn(user);
+        String json = new ObjectMapper().writeValueAsString(form);
 
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
                 .post(REQMAPPING)
@@ -66,12 +76,12 @@ public class RegistrationControllerTest {
         mvc
                 .perform(request)
                 .andExpect( status().isCreated() )
-                .andExpect( jsonPath("id").value(1l) )
+                .andExpect( jsonPath("id").value(1L) )
                 .andExpect( jsonPath("name").value(dto.getName()) )
                 .andExpect( jsonPath("email").value(dto.getEmail()) )
-                .andExpect( jsonPath("password").value(dto.getPassword()) )
+//                .andExpect( jsonPath("password").value(dto.getPassword()) )
 //                .andExpect( jsonPath("dateOfRegistration").value(dto.getDateOfRegistration()) )
-                .andExpect( jsonPath("registration").value(dto.getRegistration()) )
+                .andExpect( jsonPath("login").value(dto.getLogin()) )
 
         ;
 
@@ -81,9 +91,10 @@ public class RegistrationControllerTest {
     @DisplayName("Create Registration with variable registration duplicated")
     public void createRegistrationWithVariableRegistrationDuplicated() throws Exception {
 
-        RegistrationDTO dto = newRegisterDTO();
-        String json = new ObjectMapper().writeValueAsString(dto);
-        BDDMockito.given(service.save(Mockito.any(Registration.class)))
+        UserDTO dto = newRegisterDTO();
+        UserForm form = newRegisterForm();
+        String json = new ObjectMapper().writeValueAsString(form);
+        BDDMockito.given(service.save(Mockito.any(User.class)))
                 .willThrow(new BusinessException("Record already registered"));
 
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
@@ -105,18 +116,18 @@ public class RegistrationControllerTest {
 
         Long id = 1L;
 
-        RegistrationDTO dto = newRegisterDTO();
+        UserDTO dto = newRegisterDTO();
 
-        Registration registration = Registration.builder()
+        User user = User.builder()
                 .id(1L)
                 .name("Endy")
                 .email("endy@email.com")
                 .password("1234")
                 .dateOfRegistration(LocalDate.now())
-                .registration("001").build();
+                .login("endy").build();
 
 
-        BDDMockito.given( service.getById(id) ).willReturn(Optional.of(registration));
+        BDDMockito.given( service.getById(id) ).willReturn(Optional.of(user));
 
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
                 .get(REQMAPPING.concat("/" + id))
@@ -128,9 +139,9 @@ public class RegistrationControllerTest {
                 .andExpect( jsonPath("id").value(id) )
                 .andExpect( jsonPath("name").value(dto.getName()) )
                 .andExpect( jsonPath("email").value(dto.getEmail()) )
-                .andExpect( jsonPath("password").value(dto.getPassword()) )
+//                .andExpect( jsonPath("password").value(dto.getPassword()) )
 //                .andExpect( jsonPath("dateOfRegistration").value(dto.getDateOfRegistration()) )
-                .andExpect( jsonPath("registration").value(dto.getRegistration()) )
+                .andExpect( jsonPath("login").value(dto.getLogin()) )
         ;
     }
 
@@ -182,13 +193,14 @@ public class RegistrationControllerTest {
     public void updateRegisterTest() throws Exception {
 
         Long id = 1l;
-        RegistrationDTO dto = newRegisterDTO();
-        String json = new ObjectMapper().writeValueAsString(dto);
+        UserDTO dto = newRegisterDTO();
+        UserUpdate update = newRegisterUpdate();
+        String json = new ObjectMapper().writeValueAsString(update);
 
-        Registration updatingRegistration = Registration.builder().id(1L).name("Endy").email("endy@email.com").password("1234").dateOfRegistration(LocalDate.now()).registration("001").build();
-        BDDMockito.given( service.getById(id) ).willReturn( Optional.of(updatingRegistration) );
-        Registration updatedRegistration = Registration.builder().id(1L).name("Endy").email("endy@email.com").password("4321").dateOfRegistration(LocalDate.now()).registration("001").build();
-        BDDMockito.given(service.updateRegistration(updatingRegistration)).willReturn(updatedRegistration);
+        User updatingUser = User.builder().id(1L).name("Endy").email("endy@email.com").password("1234").dateOfRegistration(LocalDate.now()).login("endy").build();
+        BDDMockito.given( service.getById(id) ).willReturn( Optional.of(updatingUser) );
+        User updatedUser = User.builder().id(1L).name("Endy").email("endy@email.com").password("4321").dateOfRegistration(LocalDate.now()).login("endy").build();
+        BDDMockito.given(service.updateUserById(updatingUser)).willReturn(updatedUser);
 
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
                 .put(REQMAPPING.concat("/" + 1))
@@ -201,9 +213,9 @@ public class RegistrationControllerTest {
                 .andExpect( jsonPath("id").value(id) )
                 .andExpect( jsonPath("name").value(dto.getName()) )
                 .andExpect( jsonPath("email").value(dto.getEmail()) )
-                .andExpect( jsonPath("password").value(updatedRegistration.getPassword()) )
+//                .andExpect( jsonPath("password").value(updatedRegistration.getPassword()) )
 //                .andExpect( jsonPath("dateOfRegistration").value(dto.getDateOfRegistration()) )
-                .andExpect( jsonPath("registration").value(dto.getRegistration()) );
+                .andExpect( jsonPath("login").value(dto.getLogin()) );
 
     }
 
@@ -211,8 +223,7 @@ public class RegistrationControllerTest {
     @DisplayName("Update Registration Not exist.")
     public void updateRegistrationNotExistTest() throws Exception {
 
-        RegistrationDTO dto = newRegisterDTO();
-        String json = new ObjectMapper().writeValueAsString(dto);
+        String json = new ObjectMapper().writeValueAsString(newRegisterUpdate());
         BDDMockito.given( service.getById(Mockito.anyLong()) )
                 .willReturn( Optional.empty() );
 
@@ -232,19 +243,19 @@ public class RegistrationControllerTest {
 
         Long id = 1l;
 
-        Registration registration = Registration.builder()
+        User user = User.builder()
                 .id(1L)
                 .name("Endy")
                 .email("endy@email.com")
                 .password("1234")
                 .dateOfRegistration(LocalDate.now())
-                .registration("001").build();
+                .login("001").build();
 
-        BDDMockito.given( service.findRegistration(Mockito.any(Registration.class), Mockito.any(Pageable.class)) )
-                .willReturn( new PageImpl<Registration>( Arrays.asList(registration), PageRequest.of(0,100), 1 )   );
+        BDDMockito.given( service.findAllUser(Mockito.any(User.class), Mockito.any(Pageable.class)) )
+                .willReturn( new PageImpl<User>( Arrays.asList(user), PageRequest.of(0,100), 1 )   );
 
         String queryString = String.format("?name=%s&email=%s&page=0&size=100",
-                registration.getName(), registration.getEmail());
+                user.getName(), user.getEmail());
 
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
                 .get(REQMAPPING.concat(queryString))
@@ -260,14 +271,30 @@ public class RegistrationControllerTest {
         ;
     }
 
-    private RegistrationDTO newRegisterDTO(){
-        return RegistrationDTO.builder()
-                .id(1L)
+    private UserDTO newRegisterDTO(){
+        return UserDTO.builder()
+                .name("Endy")
+                .email("endy@email.com")
+                //.password("1234")
+                .dateOfRegistration(LocalDate.now())
+                .login("endy")
+                .build();
+    }
+
+    private UserForm newRegisterForm(){
+        return UserForm.builder()
                 .name("Endy")
                 .email("endy@email.com")
                 .password("1234")
-                .dateOfRegistration(LocalDate.now())
-                .registration("001")
+                .login("endy")
+                .build();
+    }
+
+    private UserUpdate newRegisterUpdate(){
+        return UserUpdate.builder()
+                .name("Endy")
+                .email("endy@email.com")
+                .password("1234")
                 .build();
     }
 }

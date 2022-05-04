@@ -1,14 +1,8 @@
 package com.womakerscode.meetup.service;
 
-import com.womakerscode.meetup.exception.BusinessException;
-import com.womakerscode.meetup.model.dto.CreateMeetupDTO;
 import com.womakerscode.meetup.model.entity.CreateMeetup;
-import com.womakerscode.meetup.model.entity.Registration;
 import com.womakerscode.meetup.repository.CreateMeetupRepository;
-import com.womakerscode.meetup.repository.RegistrationRepository;
 import com.womakerscode.meetup.service.impl.CreateMeetupServiceImpl;
-import com.womakerscode.meetup.service.impl.RegistrationServiceImpl;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

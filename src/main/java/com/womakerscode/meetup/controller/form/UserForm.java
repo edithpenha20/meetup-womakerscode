@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RegistrationForm {
+public class UserForm {
 
     @NotEmpty
     private String name;
@@ -24,6 +24,6 @@ public class RegistrationForm {
     private String password;
 
     @NotEmpty
-    private String registration;
+    private String login;
 
 }

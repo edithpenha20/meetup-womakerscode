@@ -16,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Registration {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,8 +37,11 @@ public class Registration {
     private LocalDate dateOfRegistration = LocalDate.now();
 
     @Column
-    private String registration;
+    private String login;
 
-    @OneToMany(mappedBy = "registration")
+    @OneToMany(mappedBy = "user")
     private List<Meetup> meetups;
+
+    @OneToMany(mappedBy = "users")
+    private List<CreateMeetup> eventDetails;
 }

@@ -1,14 +1,14 @@
 package com.womakerscode.meetup.controller;
 
-import com.womakerscode.meetup.model.dto.MeetupDTO;
-import com.womakerscode.meetup.model.dto.RegistrationDTO;
+import com.womakerscode.meetup.controller.form.CreateMeetupForm;
+import com.womakerscode.meetup.model.dto.*;
 import com.womakerscode.meetup.model.entity.CreateMeetup;
 import com.womakerscode.meetup.model.entity.Meetup;
-import com.womakerscode.meetup.controller.form.MeetupFilterDTO;
-import com.womakerscode.meetup.model.entity.Registration;
+import com.womakerscode.meetup.controller.form.MeetupForm;
+import com.womakerscode.meetup.model.entity.User;
 import com.womakerscode.meetup.service.CreateMeetupService;
 import com.womakerscode.meetup.service.MeetupService;
-import com.womakerscode.meetup.service.RegistrationService;
+import com.womakerscode.meetup.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,30 +26,30 @@ import java.util.stream.Collectors;
 public class MeetupController {
 
     private final MeetupService meetupService;
-    private final RegistrationService registrationService;
+    private final UserService userService;
     private final CreateMeetupService createMeetupService;
     private final ModelMapper modelMapper;
 
-    public MeetupController(MeetupService meetupService, RegistrationService registrationService, CreateMeetupService createMeetupService, ModelMapper modelMapper) {
+    public MeetupController(MeetupService meetupService, UserService userService, CreateMeetupService createMeetupService, ModelMapper modelMapper) {
         this.meetupService = meetupService;
-        this.registrationService = registrationService;
+        this.userService = userService;
         this.createMeetupService = createMeetupService;
         this.modelMapper = modelMapper;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    private MeetupDTO registerForAnEvent(@RequestBody MeetupFilterDTO filterDTO) {
+    private MeetupDTO userForAnEvent(@RequestBody MeetupFilter filter) {
 
-        Registration registration = registrationService.getByRegistration(filterDTO.getRegistration())
+        User user = userService.getUserByLogin(filter.getLogin())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
 
-        CreateMeetup newEvent = createMeetupService.findByEvent(filterDTO.getEvent())
+        CreateMeetup newEvent = createMeetupService.findByEvent(filter.getEvent())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
 
         Meetup entity = Meetup.builder()
                 .eventDetails(newEvent)
-                .registration(registration)
+                .user(user)
                 .build();
 
         entity = meetupService.save(entity);
@@ -58,21 +59,22 @@ public class MeetupController {
 
 
     @GetMapping
-    public Page<MeetupDTO> findAllMeetups(MeetupFilterDTO dto, Pageable pageRequest) {
+    public Page<MeetupDTO> findAllMeetups(MeetupFilter dto, Pageable pageRequest) {
         Page<Meetup> result = meetupService.findAllMeetups(dto, pageRequest);
         List<MeetupDTO> meetups = result
                 .getContent()
                 .stream()
                 .map(entity -> {
 
-                    Registration registration = entity.getRegistration();
-                    RegistrationDTO registrationDTO = modelMapper.map(registration, RegistrationDTO.class);
+                    User user = entity.getUser();
+                    UserDTO userDTO = modelMapper.map(user, UserDTO.class);
 
                     MeetupDTO meetupDTO = modelMapper.map(entity, MeetupDTO.class);
-                    meetupDTO.setRegistration(registrationDTO);
+                    meetupDTO.setUser(userDTO);
                     return meetupDTO;
 
                 }).collect(Collectors.toList());
         return new PageImpl<MeetupDTO>(meetups, pageRequest, result.getTotalElements());
     }
+
 }
