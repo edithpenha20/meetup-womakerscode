@@ -1,14 +1,17 @@
 package com.womakerscode.meetup.service.impl;
 
+import com.womakerscode.meetup.model.dto.CreateMeetupDTO;
 import com.womakerscode.meetup.model.entity.CreateMeetup;
 import com.womakerscode.meetup.repository.CreateMeetupRepository;
 import com.womakerscode.meetup.service.CreateMeetupService;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -55,5 +58,10 @@ public class CreateMeetupServiceImpl implements CreateMeetupService {
                         .withStringMatcher( ExampleMatcher.StringMatcher.CONTAINING )
         ) ;
         return repository.findAll(example, pageRequest);
+    }
+
+    @Override
+    public List<CreateMeetup> findAllMeetupsCreated() {
+        return repository.findAll();
     }
 }

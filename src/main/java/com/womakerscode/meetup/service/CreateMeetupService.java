@@ -1,9 +1,11 @@
 package com.womakerscode.meetup.service;
 
+import com.womakerscode.meetup.model.dto.CreateMeetupDTO;
 import com.womakerscode.meetup.model.entity.CreateMeetup;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface CreateMeetupService {
@@ -19,4 +21,6 @@ public interface CreateMeetupService {
     void deleteEventMeetup(CreateMeetup eventMeetup);
 
     Page<CreateMeetup> findAllEventMeetup(CreateMeetup filter, Pageable pageRequest);
+
+    List<CreateMeetup> findAllMeetupsCreated();
 }

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,6 +49,8 @@ public class MeetupController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
 
         Meetup entity = Meetup.builder()
+                .event(newEvent.getEvent())
+                .meetupDateRegistration(LocalDate.now())
                 .eventDetails(newEvent)
                 .user(user)
                 .build();

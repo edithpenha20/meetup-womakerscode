@@ -18,7 +18,11 @@ public class MeetupDTO {
 
     private Long id;
 
-    private CreateMeetupDTO eventDetails;
+    private String event;
+
+    private LocalDate meetupDateRegistration;
+
+    //private CreateMeetupDTO eventDetails;
 
     private UserDTO user;
 

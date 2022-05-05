@@ -1,7 +1,6 @@
 package com.womakerscode.meetup.service;
 
 import com.womakerscode.meetup.exception.BusinessException;
-import com.womakerscode.meetup.model.dto.UserDTO;
 import com.womakerscode.meetup.model.entity.User;
 import com.womakerscode.meetup.repository.UserRepository;
 import com.womakerscode.meetup.service.impl.UserServiceImpl;
@@ -37,7 +36,6 @@ public class UserServiceTest {
     @MockBean
     UserRepository repository;
 
-
     @BeforeEach
     public void setup(){
         //dependency service
@@ -46,13 +44,13 @@ public class UserServiceTest {
     }
 
     @Test
-    @DisplayName("Should save an registration")
-    public void saveStudent(){
+    @DisplayName("Should save an User")
+    public void saveUser(){
 
-        User user = createValidResgitration();
+        User user = createValidUser();
 
         when(repository.existsByLogin(Mockito.anyString())).thenReturn(false);
-        when(repository.save(user)).thenReturn(createValidResgitration());
+        when(repository.save(user)).thenReturn(createValidUser());
 
         User savedUser = service.save(user);
 
@@ -63,10 +61,10 @@ public class UserServiceTest {
     }
 
     @Test
-    @DisplayName("Should Not Saved As Registration Duplicated")
-    public void shouldNotSavedAsRegistrationDuplicated(){
+    @DisplayName("Should not saved as user duplicated")
+    public void shouldNotSavedAsUserDuplicated(){
 
-        User user = createValidResgitration();
+        User user = createValidUser();
 
         when(repository.existsByLogin(Mockito.any())).thenReturn(true);
 
@@ -80,38 +78,38 @@ public class UserServiceTest {
     }
 
     @Test
-    @DisplayName("Get registration by id.")
-    public void getRegistrationByIdTest(){
+    @DisplayName("Get user by id.")
+    public void getRegistrationUserByIdTest(){
 
-        User user = createValidResgitration();
+        User user = createValidUser();
 
         when(repository.findById(user.getId())).thenReturn(Optional.of(user));
 
-        Optional<User> foundRegistration = service.getById(user.getId());
+        Optional<User> foundUser = service.getById(user.getId());
 
-        assertThat(foundRegistration.isPresent()).isTrue();
-        assertThat(foundRegistration.get().getId()).isEqualTo(101L);
-        assertThat(foundRegistration.get().getName()).isEqualTo("Endy");
-        assertThat(foundRegistration.get().getLogin()).isEqualTo("001");
-        assertThat(foundRegistration.get().getDateOfRegistration()).isEqualTo(LocalDate.now());
+        assertThat(foundUser.isPresent()).isTrue();
+        assertThat(foundUser.get().getId()).isEqualTo(101L);
+        assertThat(foundUser.get().getName()).isEqualTo("Endy");
+        assertThat(foundUser.get().getLogin()).isEqualTo("001");
+        assertThat(foundUser.get().getDateOfRegistration()).isEqualTo(LocalDate.now());
     }
 
     @Test
     @DisplayName("When a record does not exist, it should return empty.")
-    public void registrationByIdNotFoundTest(){
+    public void userByIdNotFoundTest(){
         Long id = 101L;
         when(repository.findById(id)).thenReturn(Optional.empty());
 
-        Optional<User> registration = service.getById(id);
+        Optional<User> user = service.getById(id);
 
-        assertThat(registration.isPresent()).isFalse();
+        assertThat(user.isPresent()).isFalse();
     }
 
     //deletar registro
     @Test
-    @DisplayName("Delete registration")
-    public void deleteRegistrationTest(){
-        User user = createValidResgitration();
+    @DisplayName("Delete user")
+    public void deleteUserTest(){
+        User user = createValidUser();
 
         service.deleteUserById(user);
 
@@ -119,10 +117,10 @@ public class UserServiceTest {
         Mockito.verify(repository, Mockito.times(1)).delete(user);
     }
 
-    //deletar registro não encontrado - lancar exception
+    //deletar user não encontrado - lancar exception
     @Test
-    @DisplayName("Error deleting a non-existent record")
-    public void deleteRegistrationNotFound(){
+    @DisplayName("Error deleting a non-existent user")
+    public void deleteUserNotFound(){
         User user = new User();
 
         assertThrows(IllegalArgumentException.class, () -> service.deleteUserById(user));
@@ -130,20 +128,20 @@ public class UserServiceTest {
         Mockito.verify(repository, Mockito.never()).delete(user);
     }
 
-    //atualizar registro
+    //atualizar user
     @Test
-    @DisplayName("Update registration")
-    public void updateRegistrationTest(){
+    @DisplayName("Update user")
+    public void updateUserTest(){
 
         long id = 1L;
 
-        User modifyingResgistration = User.builder().id(id).build();
+        User modifyingUser = User.builder().id(id).build();
 
-        User modifiedUser = createValidResgitration();
+        User modifiedUser = createValidUser();
         modifiedUser.setId(id);
-        when(repository.save(modifyingResgistration)).thenReturn(modifiedUser);
+        when(repository.save(modifyingUser)).thenReturn(modifiedUser);
 
-        User user = service.updateUserById(modifyingResgistration);
+        User user = service.updateUserById(modifyingUser);
 
         assertThat(user.getId()).isEqualTo(modifiedUser.getId());
         assertThat(user.getName()).isEqualTo(modifiedUser.getName());
@@ -167,7 +165,7 @@ public class UserServiceTest {
     @DisplayName("")
     public void findRegistrationTest(){
 
-        User user = createValidResgitration();
+        User user = createValidUser();
 
         PageRequest pageRequest = PageRequest.of(0, 10);
 
@@ -185,21 +183,21 @@ public class UserServiceTest {
     }
 
     @Test
-    @DisplayName("Should get an registration model by registration attribute")
-    public void getRegistrationByRegistrationTest(){
-        String registrationAttribute = "1234";
-        when(repository.findByLogin(registrationAttribute)).thenReturn( Optional.of(User.builder().id(1l).login(registrationAttribute).build()) );
+    @DisplayName("Should get an registration model by user attribute")
+    public void getUserByRegistrationTest(){
+        String userAttribute = "1234";
+        when(repository.findByLogin(userAttribute)).thenReturn( Optional.of(User.builder().id(1l).login(userAttribute).build()) );
 
-        Optional<User> registration = service.getUserByLogin(registrationAttribute);
+        Optional<User> user = service.getUserByLogin(userAttribute);
 
-        assertThat(registration.isPresent()).isTrue();
-        assertThat(registration.get().getId()).isEqualTo(1l);
-        assertThat(registration.get().getLogin()).isEqualTo(registrationAttribute);
+        assertThat(user.isPresent()).isTrue();
+        assertThat(user.get().getId()).isEqualTo(1l);
+        assertThat(user.get().getLogin()).isEqualTo(userAttribute);
 
-        Mockito.verify(repository, Mockito.times(1)).findByLogin(registrationAttribute);
+        Mockito.verify(repository, Mockito.times(1)).findByLogin(userAttribute);
     }
 
-    private User createValidResgitration(){
+    private User createValidUser(){
         return User.builder()
                 .id(101L)
                 .name("Endy")

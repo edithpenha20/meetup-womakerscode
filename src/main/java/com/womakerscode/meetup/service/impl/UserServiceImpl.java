@@ -1,8 +1,6 @@
 package com.womakerscode.meetup.service.impl;
 
-import com.womakerscode.meetup.controller.form.UserUpdate;
 import com.womakerscode.meetup.exception.BusinessException;
-import com.womakerscode.meetup.model.dto.UserDTO;
 import com.womakerscode.meetup.model.entity.User;
 import com.womakerscode.meetup.repository.UserRepository;
 import com.womakerscode.meetup.service.UserService;
@@ -68,8 +66,8 @@ public class UserServiceImpl implements UserService {
         return repository.findByLogin(login);
     }
 
-    @Override
-    public Optional<User> getUserByLoginAttribute(String registrationAttribute) {
-        return repository.findByLogin(registrationAttribute);
-    }
+//    @Override
+//    public Optional<User> getUserByLoginAttribute(String registrationAttribute) {
+//        return repository.findByLogin(registrationAttribute);
+//    }
 }

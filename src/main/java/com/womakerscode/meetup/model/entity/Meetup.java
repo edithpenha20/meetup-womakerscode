@@ -33,7 +33,7 @@ public class Meetup {
     @ManyToOne
     private User user;
 
-    @JoinColumn(name = "author_meetup")
+    @JoinColumn(name = "id_meetup")
     @ManyToOne
     private CreateMeetup eventDetails;
 

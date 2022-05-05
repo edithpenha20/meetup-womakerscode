@@ -1,6 +1,5 @@
 package com.womakerscode.meetup.service;
 
-import com.womakerscode.meetup.model.dto.UserDTO;
 import com.womakerscode.meetup.model.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,7 +20,7 @@ public interface UserService {
 
     Optional<User> getUserByLogin(String login);
 
-    Optional<User> getUserByLoginAttribute(String registrationAttribute);
+//    Optional<User> getUserByLoginAttribute(String registrationAttribute);
 
 
 //    Optional<UserMeetupDTO> getByUserAndMeetupsId(Long id);

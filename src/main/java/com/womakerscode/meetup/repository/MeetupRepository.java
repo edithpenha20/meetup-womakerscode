@@ -27,6 +27,5 @@ public interface MeetupRepository extends JpaRepository<Meetup, Long> {
     Page<Meetup> findByUser(User user, Pageable pageable );
 
 //    Page<Meetup> findByEvent(String eventMeetup, Pageable pageRequest);
-//
-//    List<Meetup> findByUser(Long login);
+
 }
