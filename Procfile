@@ -1,0 +1,1 @@
+web: java -jar target/meetup-1.0.jar
